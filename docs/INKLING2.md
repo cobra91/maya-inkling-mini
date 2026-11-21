@@ -276,20 +276,16 @@ flips codes of a 3-bit mantissa.
 **The drafter** is left out: DSpark for Mini accepts 2.0-4.2 tokens a step (llama.cpp's implementation: prose 2.0,
 code 3.1, sums 4.2), and a window of eight - eight tokens' experts - pays for itself from about 3.3.
 
-To run it (one GPU):
+To run it (one GPU): [INKLING2-MINI.md](INKLING2-MINI.md) is the step by step guide, with the configs in
+`docs/inkling2-mini/`. In short:
 
-    python tools/strata_tokenizer.py --gguf Inkling-2-Mini-UD-Q4_K_XL.gguf --out ik2 \
+    python tools/strata_tokenizer.py --gguf models/Inkling-2-Mini-UD-Q4_K_XL.gguf --out ik2 \
         --chat-template tools/ik2/chat_template.jinja --check
-    cat > ik2-mini.json <<EOF
-    {"exe": "build/maya-ik2", "args": ["--model", "Inkling-2-Mini-UD-Q4_K_XL.gguf", "--max-context", "1048576"],
-     "env": {"IK2_KV": "fp8", "IK2_KV_MANAGED": "1", "IK2_TIER": "1", "IK2_EXPERT_LIMB": "0",
-             "IK2_GATE_BF16": "1", "IK2_GATE_TILE": "64", "IK2_Q8_UNROLL": "1", "IK2_Q8_TILE": "1",
-             "IK2_GROUP_MMA": "3", "IK2_VERIFY_ONLY": "1", "IK2_SUFFIX": "96", "IK2_BATCH_PREFILL": "1",
-             "IK2_STAGE_COLD": "1", "IK2_HEADROOM_MIB": "384"}, "tokenizer": "ik2/tokenizer", "model_name": "inkling-2-mini",
-     "vision": {"exe": "build-vision/bin/maya-vision", "mmproj": "mmproj-BF16.gguf",
-                "model": "Inkling-2-Mini-UD-Q4_K_XL.gguf", "gpu": true, "resident": true}}
-    EOF
-    python serve/server.py --engine maya --config ik2-mini.json
+    python serve/server.py --engine maya --config docs/inkling2-mini/ik2-mini.json
+
+The default config keeps every expert in VRAM with a context of 344,064 and the image encoder on the CPU. The
+1,048,576-token profile of the sections below needs `IK2_KV_MANAGED=1`, `IK2_TIER=1`, `IK2_STAGE_COLD=1` and
+`IK2_HEADROOM_MIB=384` in the config's `env`.
 
 Thinking off (`reasoning_effort` `none`, `enable_thinking` false) has the prompt open the answer's text segment:
 the model has no switch for its thinking, only the effort level, and at the lowest it still thinks a little.
