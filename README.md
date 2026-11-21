@@ -30,7 +30,7 @@ One RTX 3090 at a 300 W limit, Unsloth `UD-Q4_K_XL`, greedy, a cold prompt every
 Linux, an RTX 3090 (or another 24 GB `sm_86` card), CUDA 12.8, Python 3.10 or newer.
 
 ```bash
-git clone https://github.com/alesha-pro/inkling2-mini-1x3090 && cd inkling2-mini-1x3090
+git clone https://github.com/alesha-pro/maya-inkling-mini && cd maya-inkling-mini
 pip install numpy jinja2 regex pyyaml tqdm requests pillow psutil "jsonschema>=4.18,<5" huggingface_hub
 
 # the engine
