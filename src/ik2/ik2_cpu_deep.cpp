@@ -8,6 +8,21 @@
 #include <cstring>
 #include <new>
 
+#ifdef _WIN32
+#include <malloc.h>
+static inline int posix_memalign(void** memptr, size_t alignment, size_t size) {
+    void* ptr = _aligned_malloc(size, alignment);
+    if (!ptr) return 12;
+    *memptr = ptr;
+    return 0;
+}
+static inline float _cvtsh_ss(unsigned short h) {
+    __m128i v = _mm_cvtsi32_si128(h);
+    __m128 f = _mm_cvtph_ps(v);
+    return _mm_cvtss_f32(f);
+}
+#endif
+
 namespace ik2::cpu {
 struct alignas(32) Block {
     int8_t w[16][8];

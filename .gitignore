@@ -62,3 +62,7 @@ build-vision.bat
 /data/hy4-cpu-lane.txt
 /data/hy4-cpu-lane.txt.new
 /data/vram-room.json
+*.obj
+*.exe
+/ik2/
+
